@@ -3,7 +3,6 @@ package com.rodrigoaaenggmail.agenda
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
-import android.view.View
 import android.widget.Button
 import android.widget.Toast
 
@@ -21,10 +20,7 @@ class FomularioActivity : AppCompatActivity() {
             Toast.makeText (this@FomularioActivity, "Botao clicado", Toast.LENGTH_SHORT).show()
         }
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+
     }
 
 }

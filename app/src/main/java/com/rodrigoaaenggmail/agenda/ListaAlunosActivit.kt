@@ -18,6 +18,10 @@ class ListaAlunosActivit : AppCompatActivity() {
         setContentView(R.layout.activity_lista_alunos)
         setSupportActionBar(toolbar)
 
+        /* Conecta com banco de dados */
+        // Busca no banco de dados
+        // popula o array de strings
+
         val alunos = arrayOf("Rodrigo", "Thiago", "Maria")
         val listaAlunos = findViewById<ListView>(R.id.lista_alunos)
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alunos)

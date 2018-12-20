@@ -1,4 +1,4 @@
-package com.rodrigoaaenggmail.agenda
+package com.rodrigoaaenggmail.agenda.modelo
 
 class Aluno(
     var nome: String,

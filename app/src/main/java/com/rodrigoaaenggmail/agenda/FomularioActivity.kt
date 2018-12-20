@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 //import android.widget.EditText foi usado no começo do projeto
 import android.widget.Toast
+import com.rodrigoaaenggmail.agenda.dao.AlunoDAO
 
 import kotlinx.android.synthetic.main.activity_fomulario.*
 
@@ -39,7 +40,14 @@ class FomularioActivity : AppCompatActivity() {
         if (item != null) when (item.itemId) {
             R.id.menu_formulario_ok -> {
                 var aluno = helper!!.pegaAluno()
-                Toast.makeText(this@FomularioActivity, "Aluno Salvo - " + aluno.nome, Toast.LENGTH_SHORT).show()
+
+                // Conecta com o banco
+                var dao = AlunoDAO (this)
+                // faz quary para salvar o aluno
+                dao.insere (aluno)
+                // fecha conexão
+                dao.close()
+                Toast.makeText(this@FomularioActivity, "Aluno " + aluno.nome + " Salvo", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }

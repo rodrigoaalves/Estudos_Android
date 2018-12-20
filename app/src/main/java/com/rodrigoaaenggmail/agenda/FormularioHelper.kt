@@ -2,6 +2,8 @@ package com.rodrigoaaenggmail.agenda
 
 import android.widget.EditText
 import android.widget.RatingBar
+import com.rodrigoaaenggmail.agenda.modelo.Aluno
+import java.lang.Double
 
 
 class FormularioHelper(activity: FomularioActivity) {
@@ -22,9 +24,11 @@ class FormularioHelper(activity: FomularioActivity) {
     }
 
     fun pegaAluno(): Aluno {
-        val aluno = Aluno(campoNome.text.toString(), campoEndereco.text.toString(),
+        val aluno = Aluno(
+            campoNome.text.toString(), campoEndereco.text.toString(),
             campoSite.text.toString(), campoTelefone.text.toString(), campoComentario.text.toString(),
-            java.lang.Double.valueOf(campoNota.progress.toDouble()))
+            Double.valueOf(campoNota.progress.toDouble())
+        )
         return aluno
     }
 }

@@ -51,10 +51,5 @@
                     android:max="10"
                     android:layout_gravity="center"
                     android:id="@+id/formulario_nota"/>
-
-                <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:text="SALVAR"
-                        android:id="@+id/formulario_btSalvar"
-                />
         </LinearLayout>
 </ScrollView>

@@ -1,5 +1,6 @@
 package com.rodrigoaaenggmail.agenda
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -7,6 +8,7 @@ import android.view.MenuItem
 //import android.widget.EditText foi usado no começo do projeto
 import android.widget.Toast
 import com.rodrigoaaenggmail.agenda.dao.AlunoDAO
+import com.rodrigoaaenggmail.agenda.modelo.Aluno
 
 import kotlinx.android.synthetic.main.activity_fomulario.*
 
@@ -20,6 +22,14 @@ class FomularioActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         helper = FormularioHelper(this)
+
+        val intent = getIntent()
+        val aluno = intent.getSerializableExtra("aluno") as Aluno?
+
+        if (aluno != null) {
+            helper!!.preencheFormulario (aluno)
+        }
+
 
         /*val ButtonSave = findViewById<Button>(R.id.formulario_btSalvar)
         ButtonSave.setOnClickListener {
@@ -40,11 +50,15 @@ class FomularioActivity : AppCompatActivity() {
         if (item != null) when (item.itemId) {
             R.id.menu_formulario_ok -> {
                 var aluno = helper!!.pegaAluno()
-
                 // Conecta com o banco
-                var dao = AlunoDAO (this)
-                // faz quary para salvar o aluno
-                dao.insere (aluno)
+                val dao = AlunoDAO (this)
+
+                if (aluno.id != null) {
+                    dao.altera(aluno)
+                } else {
+                    // faz quary para salvar o aluno
+                    dao.insere (aluno)
+                }
                 // fecha conexão
                 dao.close()
                 Toast.makeText(this@FomularioActivity, "Aluno " + aluno.nome + " Salvo", Toast.LENGTH_SHORT).show()

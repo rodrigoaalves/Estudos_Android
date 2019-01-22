@@ -15,6 +15,12 @@ import com.rodrigoaaenggmail.agenda.modelo.Aluno
 
 import kotlinx.android.synthetic.main.activity_lista_alunos.*
 import java.io.Serializable
+import android.graphics.Color.parseColor
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.provider.Browser
+import android.view.Menu
+
 
 class ListaAlunosActivit : AppCompatActivity() {
 
@@ -29,6 +35,13 @@ class ListaAlunosActivit : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_alunos)
         setSupportActionBar(toolbar)
+
+        /* Cor da Actionbar */
+        val bar = supportActionBar
+        bar!!.setBackgroundDrawable(ColorDrawable(parseColor("#440144")))
+
+
+
         listaAlunos = findViewById<ListView>(R.id.lista_alunos)
         val novoAluno = findViewById <Button>(R.id.novoAluno)
         carregaLista()
@@ -85,12 +98,27 @@ class ListaAlunosActivit : AppCompatActivity() {
 
      *******************************************/
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        val deletar  = menu!!.add("Deletar")
+
+        val info = menuInfo as AdapterView.AdapterContextMenuInfo
+        val dao = AlunoDAO (this@ListaAlunosActivit)
+        val aluno = listaAlunos!!.getItemAtPosition(info.position) as Aluno
+        var nomeSite = aluno.site
+
+        if (!nomeSite!!.startsWith("http://")){
+            nomeSite = "http://" + aluno.site
+        }
+
+        val site = menu!!.add ("Visitar site")
+        val intentSite = Intent (Intent.ACTION_VIEW)
+        intentSite.setData(Uri.parse(nomeSite))
+        site.setIntent(intentSite)
+
+
+        val deletar  = menu.add("Deletar")
             deletar.setOnMenuItemClickListener (object: MenuItem.OnMenuItemClickListener {
                 override fun onMenuItemClick(item: MenuItem): Boolean {
-                    val info = menuInfo as AdapterView.AdapterContextMenuInfo
-                    val dao = AlunoDAO (this@ListaAlunosActivit)
-                    val aluno = listaAlunos!!.getItemAtPosition(info.position) as Aluno
+
+
                     dao.deleta (aluno)
                     carregaLista()
                     Toast.makeText(this@ListaAlunosActivit, "Deletar o aluno " + aluno.nome, Toast.LENGTH_SHORT).show()

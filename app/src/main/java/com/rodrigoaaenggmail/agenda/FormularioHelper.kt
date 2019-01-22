@@ -4,7 +4,6 @@ import android.view.WindowId
 import android.widget.EditText
 import android.widget.RatingBar
 import com.rodrigoaaenggmail.agenda.modelo.Aluno
-import java.lang.Double
 
 
 class FormularioHelper(activity: FomularioActivity) {
@@ -28,14 +27,14 @@ class FormularioHelper(activity: FomularioActivity) {
 
     fun pegaAluno(): Aluno {
 
-        aluno!!.nome = campoNome.text.toString()
-        aluno!!.endereco = campoEndereco.text.toString()
-        aluno!!.site = campoSite.text.toString()
-        aluno!!.telefone = campoTelefone.text.toString()
-        aluno!!.comentario = campoComentario.text.toString()
-        aluno!!.nota = java.lang.Double.valueOf(campoNota.progress.toDouble())
+        aluno.nome = campoNome.text.toString()
+        aluno.endereco = campoEndereco.text.toString()
+        aluno.site = campoSite.text.toString()
+        aluno.telefone = campoTelefone.text.toString()
+        aluno.comentario = campoComentario.text.toString()
+        aluno.nota = java.lang.Double.valueOf(campoNota.progress.toDouble())
 
-        return aluno!!
+        return aluno
     }
 
     fun preencheFormulario(aluno: Aluno) {

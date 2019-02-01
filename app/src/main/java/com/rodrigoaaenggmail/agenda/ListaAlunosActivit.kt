@@ -2,6 +2,8 @@ package com.rodrigoaaenggmail.agenda
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.PermissionInfo
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -19,7 +21,11 @@ import android.graphics.Color.parseColor
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.provider.Browser
+import android.support.v4.app.ActivityCompat
 import android.view.Menu
+import java.security.Permission
+import java.util.*
+import java.util.jar.Manifest
 
 
 class ListaAlunosActivit : AppCompatActivity() {
@@ -104,11 +110,41 @@ class ListaAlunosActivit : AppCompatActivity() {
         val aluno = listaAlunos!!.getItemAtPosition(info.position) as Aluno
         var nomeSite = aluno.site
 
+        val itemLigar = menu!!.add ("Ligar")
+        itemLigar.setOnMenuItemClickListener (object: MenuItem.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem): Boolean {
+                if (ActivityCompat.checkSelfPermission(this@ListaAlunosActivit, android.Manifest.permission.CALL_PHONE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this@ListaAlunosActivit,
+                                                      arrayOf (android.Manifest.permission.CALL_PHONE),12)
+                } else {
+                    val intentLigar = Intent(Intent.ACTION_CALL)
+                    intentLigar.setData(Uri.parse("tel:" + aluno.telefone))
+                    startActivity(intentLigar)
+                }
+
+                return false
+            }
+        })
+
+
+
+        val itemSMS = menu.add ("Envia SMS")
+        val intentSMS = Intent (Intent.ACTION_VIEW)
+        intentSMS.setData(Uri.parse("sms:" + aluno.telefone))
+        itemSMS.setIntent(intentSMS)
+
+        val itemEndereco = menu.add ("Visualizar no mapa")
+        val intentMapa = Intent (Intent.ACTION_VIEW)
+        intentMapa.setData(Uri.parse("geo:0,0?q=" + aluno.endereco))
+        itemEndereco.setIntent(intentMapa)
+
+
         if (!nomeSite!!.startsWith("http://")){
             nomeSite = "http://" + aluno.site
         }
 
-        val site = menu!!.add ("Visitar site")
+        val site = menu.add ("Visitar site")
         val intentSite = Intent (Intent.ACTION_VIEW)
         intentSite.setData(Uri.parse(nomeSite))
         site.setIntent(intentSite)
@@ -127,5 +163,14 @@ class ListaAlunosActivit : AppCompatActivity() {
             }
         )
     }
+
+    // Ver o resultado da permissão logo apos a solicitação da permissão.
+    /*override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == 12) {
+            // faz a ligação
+        }
+    } */
 
 }

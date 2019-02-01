@@ -1,22 +1,40 @@
 package com.rodrigoaaenggmail.agenda
 
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.provider.FontRequest
+import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 //import android.widget.EditText foi usado no começo do projeto
 import android.widget.Toast
 import com.rodrigoaaenggmail.agenda.dao.AlunoDAO
 import com.rodrigoaaenggmail.agenda.modelo.Aluno
 
 import kotlinx.android.synthetic.main.activity_fomulario.*
+import java.io.File
+import android.support.design.widget.CoordinatorLayout.Behavior.setTag
+import android.graphics.Bitmap.createScaledBitmap
+import android.graphics.Bitmap
+import android.widget.ImageView
+
 
 class FomularioActivity : AppCompatActivity() {
 
     var helper: FormularioHelper? = null
+    val CameraConst = 321
+    val caminhoFoto = "/" + System.currentTimeMillis() + ".jpg"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +54,28 @@ class FomularioActivity : AppCompatActivity() {
             helper!!.preencheFormulario (aluno)
         }
 
+        val botaoFoto = findViewById<Button>(R.id.formulario_botao_foto)
+
+        botaoFoto.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                if (ActivityCompat.checkSelfPermission(this@FomularioActivity, android.Manifest.permission.CAMERA
+                    ) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(
+                        this@FomularioActivity,
+                        arrayOf(android.Manifest.permission.CAMERA), 52
+                    )
+                } else {
+                    val intentCamera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    val Path = getExternalFilesDir(null)
+                    val arquivoFoto = File(Path, caminhoFoto)
+                    intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this@FomularioActivity,
+                                        BuildConfig.APPLICATION_ID + ".provider", arquivoFoto))
+
+                    startActivityForResult(intentCamera, CameraConst)
+                }
+            }
+        })
+
 
         /*val ButtonSave = findViewById<Button>(R.id.formulario_btSalvar)
         ButtonSave.setOnClickListener {
@@ -44,7 +84,33 @@ class FomularioActivity : AppCompatActivity() {
             startActivity(VaiPraLista)**** Muito usado para criar novas activitys */
             finish()
         }*/
+
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CameraConst && resultCode == Activity.RESULT_OK) {
+            val campoFoto = findViewById<ImageView>(R.id.formulario_foto)
+            val Path = getExternalFilesDir(null)
+            val arquivoFoto = Path.toString() + caminhoFoto
+            val bitmap = BitmapFactory.decodeFile(arquivoFoto)
+            if (bitmap != null) {
+                val bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 150, 150, true)
+                campoFoto.setImageBitmap(bitmapReduzido)
+                campoFoto.setTag(caminhoFoto)
+                campoFoto.scaleType = ImageView.ScaleType.FIT_XY
+            }
+        }
+    }
+
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        if (resultCode == 321 && resultCode == Activity.RESULT_OK){
+            val bitmap = BitmapFactory.decodeFile(caminhoFoto)
+            bitmapReduzido = bitmap.createScaledBitmap(bitmap, 150, 150, true)
+            /*campoFoto.setImageBitmap(bitmapReduzido;
+            campoFoto.setTag(caminhoFoto)*/
+        }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater

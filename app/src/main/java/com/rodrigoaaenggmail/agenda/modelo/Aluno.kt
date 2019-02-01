@@ -1,4 +1,5 @@
 package com.rodrigoaaenggmail.agenda.modelo
+import android.graphics.Bitmap
 import java.io.Serializable
 
 class Aluno : Serializable {
@@ -10,6 +11,7 @@ class Aluno : Serializable {
     var site: String? = null
     var comentario: String? = null
     var nota: Double? = null
+    var CaminhoFoto: String? = null
 
     override fun toString(): String {
         return id.toString() + " - " + nome

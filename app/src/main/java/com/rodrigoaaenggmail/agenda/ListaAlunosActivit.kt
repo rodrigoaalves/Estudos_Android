@@ -23,6 +23,7 @@ import android.net.Uri
 import android.provider.Browser
 import android.support.v4.app.ActivityCompat
 import android.view.Menu
+import com.rodrigoaaenggmail.agenda.Adapter.AlunosAdapter
 import java.security.Permission
 import java.util.*
 import java.util.jar.Manifest
@@ -83,7 +84,7 @@ class ListaAlunosActivit : AppCompatActivity() {
         val alunos = dao.buscaAlunos()
         dao.close()
         //val alunos = arrayOf("Rodrigo", "Thiago", "Maria")
-        val adapter = ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos)
+        val adapter = AlunosAdapter (this, alunos)
         listaAlunos!!.adapter = adapter
     }
 

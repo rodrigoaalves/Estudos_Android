@@ -1,9 +1,13 @@
 package com.rodrigoaaenggmail.agenda
 
-import android.view.WindowId
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.RatingBar
 import com.rodrigoaaenggmail.agenda.modelo.Aluno
+
+
 
 
 class FormularioHelper(activity: FomularioActivity) {
@@ -13,6 +17,7 @@ class FormularioHelper(activity: FomularioActivity) {
     private val campoSite: EditText
     private val campoComentario: EditText
     private val campoNota: RatingBar
+    private val campoFoto: ImageView
     private var aluno = Aluno()
 
 
@@ -23,6 +28,7 @@ class FormularioHelper(activity: FomularioActivity) {
         campoSite = activity.findViewById(R.id.formulario_site) as EditText
         campoComentario = activity.findViewById(R.id.formulario_comentario) as EditText
         campoNota = activity.findViewById(R.id.formulario_nota) as RatingBar
+        campoFoto = activity.findViewById(R.id.formulario_foto) as ImageView
     }
 
     fun pegaAluno(): Aluno {
@@ -33,6 +39,7 @@ class FormularioHelper(activity: FomularioActivity) {
         aluno.telefone = campoTelefone.text.toString()
         aluno.comentario = campoComentario.text.toString()
         aluno.nota = java.lang.Double.valueOf(campoNota.progress.toDouble())
+        aluno.CaminhoFoto = campoFoto.tag as String?
 
         return aluno
     }
@@ -44,6 +51,19 @@ class FormularioHelper(activity: FomularioActivity) {
         campoSite.setText(aluno.site)
         campoTelefone.setText(aluno.telefone)
         campoNota.progress =  aluno.nota!!.toInt()
+        CarregaImagem(aluno.CaminhoFoto)
         this.aluno = aluno
+    }
+
+    fun CarregaImagem (caminhoFoto: String?)
+    {
+        if (caminhoFoto != null) {
+            val bitmap = BitmapFactory.decodeFile(caminhoFoto)
+            val bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 150, 150, true)
+            campoFoto.setImageBitmap(bitmapReduzido)
+            campoFoto.setTag(caminhoFoto)
+            campoFoto.scaleType = ImageView.ScaleType.FIT_XY
+            campoFoto.setTag(caminhoFoto)
+        }
     }
 }

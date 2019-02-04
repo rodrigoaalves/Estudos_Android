@@ -8,18 +8,30 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.rodrigoaaenggmail.agenda.modelo.Aluno
 
 /* Versão 5 da tabela da dados */
-class AlunoDAO(context: Context) : SQLiteOpenHelper(context, "Agenda", null, 5) {
+class AlunoDAO(context: Context) : SQLiteOpenHelper(context, "Agenda", null, 6) {
 
     override fun onCreate(db: SQLiteDatabase) {
         val sql =
-            "CREATE TABLE Alunos (id INTEGER PRIMARY KEY, nome TEXT NOT NULL, endereco TEXT, telefone TEXT, site TEXT,  comentario TEXT,  nota REAL)"
+            "CREATE TABLE Alunos (id INTEGER PRIMARY KEY, " +
+                    "nome TEXT NOT NULL, " +
+                    "endereco TEXT, telefone TEXT, " +
+                    "site TEXT,  comentario TEXT,  " +
+                    "nota REAL, " +
+                    "caminhoFoto TEXT);"
         db.execSQL(sql)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        val sql = "DROP TABLE IF EXISTS Alunos"
-        db.execSQL(sql)
-        onCreate(db)
+        var sql: String?
+
+        when (oldVersion) {
+            5 -> {
+                sql = "ALTER TABLE Alunos ADD COLUMN caminhoFoto TEXT"
+                db.execSQL(sql)
+                //onCreate(db) para o alter table não precisa
+            }
+        }
+
     }
 
     fun insere (aluno: Aluno){
@@ -37,6 +49,7 @@ class AlunoDAO(context: Context) : SQLiteOpenHelper(context, "Agenda", null, 5) 
         dados.put("telefone", aluno.telefone)
         dados.put("comentario", aluno.comentario)
         dados.put("nota", aluno.nota)
+        dados.put("caminhoFoto", aluno.CaminhoFoto)
         return dados
     }
 
@@ -56,6 +69,7 @@ class AlunoDAO(context: Context) : SQLiteOpenHelper(context, "Agenda", null, 5) 
             aluno.comentario = c.getString(c.getColumnIndex("comentario"))
             aluno.nota = c.getDouble(c.getColumnIndex("nota"))
             aluno.id = c.getLong(c.getColumnIndex("id"))
+            aluno.CaminhoFoto = c.getString(c.getColumnIndex("caminhoFoto"))
 
             alunos.add (aluno)
         }

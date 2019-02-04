@@ -34,7 +34,8 @@ class FomularioActivity : AppCompatActivity() {
 
     var helper: FormularioHelper? = null
     val CameraConst = 321
-    val caminhoFoto = "/" + System.currentTimeMillis() + ".jpg"
+    var caminhoFoto = "/" + System.currentTimeMillis() + ".jpg"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +72,7 @@ class FomularioActivity : AppCompatActivity() {
                     intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this@FomularioActivity,
                                         BuildConfig.APPLICATION_ID + ".provider", arquivoFoto))
 
+                    caminhoFoto = arquivoFoto.toString()
                     startActivityForResult(intentCamera, CameraConst)
                 }
             }
@@ -89,16 +91,7 @@ class FomularioActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CameraConst && resultCode == Activity.RESULT_OK) {
-            val campoFoto = findViewById<ImageView>(R.id.formulario_foto)
-            val Path = getExternalFilesDir(null)
-            val arquivoFoto = Path.toString() + caminhoFoto
-            val bitmap = BitmapFactory.decodeFile(arquivoFoto)
-            if (bitmap != null) {
-                val bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 150, 150, true)
-                campoFoto.setImageBitmap(bitmapReduzido)
-                campoFoto.setTag(caminhoFoto)
-                campoFoto.scaleType = ImageView.ScaleType.FIT_XY
-            }
+            helper!!.CarregaImagem (caminhoFoto)
         }
     }
 
